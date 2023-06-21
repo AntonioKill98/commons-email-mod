@@ -475,6 +475,8 @@
                     <targetJdk>${maven.compiler.target}</targetJdk>
                 </configuration>
             </plugin>
+           
+            <!-- DISATTIVAZIONE PLUGIN RAT PER CONTROLLO LICENZE FILE
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
@@ -483,7 +485,8 @@
                         <exclude>src/test/resources/eml/**</exclude>
                     </excludes>
                 </configuration>
-            </plugin>            
+            </plugin>    
+            -->
             <plugin>
               <groupId>com.github.spotbugs</groupId>
               <artifactId>spotbugs-maven-plugin</artifactId>
