@@ -385,9 +385,9 @@
             <groupId>org.apache.rat</groupId>
             <artifactId>apache-rat-plugin</artifactId>
             <configuration>
-              <excludes>
+              <!-- <excludes>
                 <exclude>src/test/resources/eml/**</exclude>
-              </excludes>
+              </excludes> -->
               <skip>true</skip>
             </configuration>
           </plugin>
@@ -482,11 +482,11 @@
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
                 <configuration>
-                    <excludes>
+                    <!-- <excludes>
                         <exclude>src/test/resources/eml/**</exclude>
-                    </excludes>
-                </configuration>
-                <skip>true</skip>
+                    </excludes> -->
+                    <skip>true</skip>
+                </configuration>   
             </plugin>    
            <!-- -->
            
