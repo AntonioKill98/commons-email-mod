@@ -380,7 +380,7 @@
             </configuration>
           </plugin>
            
-          <!-- DISATTIVAZIONE DEL PLUGIN RAT PER IL CONTROLLO DELLE LICENZE 
+          <!-- DISATTIVAZIONE DEL PLUGIN RAT PER IL CONTROLLO DELLE LICENZE -->
           <plugin>
             <groupId>org.apache.rat</groupId>
             <artifactId>apache-rat-plugin</artifactId>
@@ -390,7 +390,7 @@
               </excludes>
             </configuration>
           </plugin>
-          -->
+          <!-- -->
            
           <!-- Declaration place matters must be after gpg. -->
           <plugin>
@@ -476,7 +476,7 @@
                 </configuration>
             </plugin>
            
-            <!-- DISATTIVAZIONE PLUGIN RAT PER CONTROLLO LICENZE FILE
+            <!-- DISATTIVAZIONE PLUGIN RAT PER CONTROLLO LICENZE FILE -->
             <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
@@ -486,7 +486,8 @@
                     </excludes>
                 </configuration>
             </plugin>    
-            -->
+           <!-- -->
+           
             <plugin>
               <groupId>com.github.spotbugs</groupId>
               <artifactId>spotbugs-maven-plugin</artifactId>
