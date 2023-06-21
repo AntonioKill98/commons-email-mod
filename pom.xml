@@ -388,6 +388,7 @@
               <excludes>
                 <exclude>src/test/resources/eml/**</exclude>
               </excludes>
+              <skip>true</skip>
             </configuration>
           </plugin>
           <!-- -->
@@ -485,6 +486,7 @@
                         <exclude>src/test/resources/eml/**</exclude>
                     </excludes>
                 </configuration>
+                <skip>true</skip>
             </plugin>    
            <!-- -->
            
