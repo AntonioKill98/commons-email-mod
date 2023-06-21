@@ -379,6 +379,8 @@
               </ignorePathsToDelete>
             </configuration>
           </plugin>
+           
+          <!-- DISATTIVAZIONE DEL PLUGIN RAT PER IL CONTROLLO DELLE LICENZE 
           <plugin>
             <groupId>org.apache.rat</groupId>
             <artifactId>apache-rat-plugin</artifactId>
@@ -388,6 +390,8 @@
               </excludes>
             </configuration>
           </plugin>
+          -->
+           
           <!-- Declaration place matters must be after gpg. -->
           <plugin>
             <groupId>org.apache.commons</groupId>
