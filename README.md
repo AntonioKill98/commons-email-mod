@@ -40,7 +40,7 @@
  |                                                                      |
  +======================================================================+
 --->
-Apache Commons Email
+Apache Commons Email - Modded Version for the Software Dependability Exam
 ===================
 
 [![GitHub Actions Status](https://github.com/apache/commons-email/workflows/Java%20CI/badge.svg)](https://github.com/apache/commons-email/actions)
@@ -50,6 +50,11 @@ Apache Commons Email
 
 Apache Commons Email aims to provide an API for sending email. It is built on top of
         the JavaMail API, which it aims to simplify.
+
+This is a MODDED VERSION!
+-------------
+This is a Modded Version of the original Commons-EMail library, so is not intended for applicational use.
+Be Aware.
 
 Documentation
 -------------
