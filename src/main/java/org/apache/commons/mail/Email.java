@@ -54,7 +54,7 @@ import org.apache.commons.mail.util.IDNEmailAddressConverter;
  */
 public abstract class Email
 {
-    private static final InternetAddress[] EMPTY_INTERNET_ADDRESS_ARRAY = new InternetAddress[0];
+    //private static final InternetAddress[] EMPTY_INTERNET_ADDRESS_ARRAY = new InternetAddress[0];
 
     /** @deprecated since 1.3, use {@link EmailConstants#SENDER_EMAIL} instead */
     @Deprecated
@@ -802,8 +802,15 @@ public abstract class Email
             throw new EmailException("Address List provided was invalid");
         }
 
+        /*
+        FOR CAMBIATO PER ECOCODE
         for (final String email : emails)
         {
+            addTo(email, null);
+        }
+        */
+        for (int i = 0; i < emails.length; i++) {
+            String email = emails[i];
             addTo(email, null);
         }
 
@@ -912,8 +919,16 @@ public abstract class Email
             throw new EmailException("Address List provided was invalid");
         }
 
+        /*
+        FOR SOSTITUITO PER ECOCODE
         for (final String email : emails)
         {
+            addCc(email, null);
+        }
+        */
+
+        for (int i = 0; i < emails.length; ++i) {
+            String email = emails[i];
             addCc(email, null);
         }
 
@@ -1021,8 +1036,16 @@ public abstract class Email
             throw new EmailException("Address List provided was invalid");
         }
 
+        /*
+        FOR SOSTITUITO PER ECOCODE
         for (final String email : emails)
         {
+            addBcc(email, null);
+        }
+        */
+
+        for (int i = 0; i < emails.length; ++i) {
+            String email = emails[i];
             addBcc(email, null);
         }
 
@@ -1632,7 +1655,7 @@ public abstract class Email
      */
     protected InternetAddress[] toInternetAddressArray(final List<InternetAddress> list)
     {
-        return list.toArray(EMPTY_INTERNET_ADDRESS_ARRAY);
+        return list.toArray(new InternetAddress[0]);
     }
 
     /**

@@ -45,7 +45,10 @@ import javax.activation.DataSource;
 public class ByteArrayDataSource implements DataSource
 {
     /** Define the buffer size. */
+    /*
+    VIENE USATO UNA SOLA VOLTA, QUINDI L'HO ESCLUSO
     public static final int BUFFER_SIZE = 512;
+    */
 
     /** Stream containing the Data. */
     private ByteArrayOutputStream baos;
@@ -100,7 +103,10 @@ public class ByteArrayDataSource implements DataSource
      * @throws IOException IOException
      * @since 1.0
      */
+    /*
+    COSTRUTTO SOSTITUITO PER EVITARE CODESMELLS RELATIVI AD ECOCODE
     public ByteArrayDataSource(final String data, final String aType) throws IOException
+
     {
         this.type = aType;
 
@@ -116,6 +122,7 @@ public class ByteArrayDataSource implements DataSource
         }
         catch (final UnsupportedEncodingException uex)
         {
+            uex.printStackTrace();
             throw new IOException("The Character Encoding is not supported.");
         }
         finally
@@ -126,6 +133,17 @@ public class ByteArrayDataSource implements DataSource
             }
         }
     }
+    */
+    public ByteArrayDataSource(final String data, final String aType) throws IOException {
+        this.type = aType;
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            baos.write(data.getBytes("iso-8859-1"));
+            baos.flush();
+        } catch (final UnsupportedEncodingException e) {
+            throw new IOException("The Character Encoding is not supported.");
+        }
+    }
+
 
     /**
       * Create a datasource from an input stream.
@@ -133,6 +151,8 @@ public class ByteArrayDataSource implements DataSource
       * @param aIs An InputStream.
       * @throws IOException IOException
       */
+
+    /* DISATTIVATO CAUSA CODESMELLS ECOCODE
     private void byteArrayDataSource(final InputStream aIs)
         throws IOException
     {
@@ -142,7 +162,8 @@ public class ByteArrayDataSource implements DataSource
         try
         {
             int length = 0;
-            final byte[] buffer = new byte[ByteArrayDataSource.BUFFER_SIZE];
+            //QUA VIENE USATA LA VARIABILE STATICA DISATTIVATA
+            final byte[] buffer = new byte[512];
 
             bis = new BufferedInputStream(aIs);
             baos = new ByteArrayOutputStream();
@@ -173,6 +194,24 @@ public class ByteArrayDataSource implements DataSource
             }
         }
     }
+    */
+
+    private void byteArrayDataSource(final InputStream aIs) throws IOException {
+        try (BufferedInputStream bis = new BufferedInputStream(aIs);
+             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             BufferedOutputStream osWriter = new BufferedOutputStream(baos)) {
+
+            int length = 0;
+            final byte[] buffer = new byte[512];
+
+            while ((length = bis.read(buffer)) != -1) {
+                osWriter.write(buffer, 0, length);
+            }
+
+            osWriter.flush();
+        }
+    }
+
 
     /**
      * Get the content type.

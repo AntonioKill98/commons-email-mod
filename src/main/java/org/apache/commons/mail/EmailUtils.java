@@ -77,16 +77,16 @@ final class EmailUtils
     // Static initializer for safe_uri
     static {
         // alpha characters
-        for (int i = 'a'; i <= 'z'; i++)
+        for (int i = 'a'; i <= 'z'; ++i)
         {
             SAFE_URL.set(i);
         }
-        for (int i = 'A'; i <= 'Z'; i++)
+        for (int i = 'A'; i <= 'Z'; ++i)
         {
             SAFE_URL.set(i);
         }
         // numeric characters
-        for (int i = '0'; i <= '9'; i++)
+        for (int i = '0'; i <= '9'; ++i)
         {
             SAFE_URL.set(i);
         }
@@ -262,7 +262,7 @@ final class EmailUtils
             }
             else
             {
-                count++;
+                ++count;
             }
         }
 
@@ -296,6 +296,7 @@ final class EmailUtils
         }
 
         final StringBuilder builder = new StringBuilder();
+        /* CORREZIONE PER ECOCODE
         for (final byte c : input.getBytes(US_ASCII))
         {
             int b = c;
@@ -316,6 +317,24 @@ final class EmailUtils
                 builder.append(hex2);
             }
         }
+        */
+        byte[] inputBytes = input.getBytes(US_ASCII);
+        for (int i = 0; i < inputBytes.length; ++i) {
+            int b = inputBytes[i];
+            if (b < 0) {
+                b = 256 + b;
+            }
+            if (SAFE_URL.get(b)) {
+                builder.append((char) b);
+            } else {
+                builder.append(ESCAPE_CHAR);
+                final char hex1 = Character.toUpperCase(Character.forDigit(b >> 4 & 0xF, RADIX));
+                final char hex2 = Character.toUpperCase(Character.forDigit(b & 0xF, RADIX));
+                builder.append(hex1);
+                builder.append(hex2);
+            }
+        }
+
         return builder.toString();
     }
 
