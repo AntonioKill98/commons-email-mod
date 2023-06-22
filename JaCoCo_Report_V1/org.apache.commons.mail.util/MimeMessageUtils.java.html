@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MimeMessageUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Commons Email</a> &gt; <a href="index.source.html" class="el_package">org.apache.commons.mail.util</a> &gt; <span class="el_source">MimeMessageUtils.java</span></div><h1>MimeMessageUtils.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.commons.mail.util;
+
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.internet.MimeMessage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+
+/**
+ * Static helper methods.
+ *
+ * @since 1.3
+ */
+public final class MimeMessageUtils
+{
+    /**
+     * Instances should NOT be constructed in standard programming.
+     */
+    private MimeMessageUtils()
+    {
+    }
+
+    /**
+     * Creates a MimeMessage.
+     *
+     * @param session the mail session
+     * @param source the input data
+     * @return the MimeMessage
+     * @throws MessagingException creating the MimeMessage failed
+     * @throws IOException creating the MimeMessage failed
+     */
+    public static MimeMessage createMimeMessage(final Session session, final byte[] source)
+        throws MessagingException, IOException
+    {
+<span class="nc" id="L56">        try (ByteArrayInputStream is = new ByteArrayInputStream(source))</span>
+        {
+<span class="nc" id="L58">            return new MimeMessage(session, is);</span>
+        }
+    }
+
+    /**
+     * Creates a MimeMessage.
+     *
+     * @param session the mail session
+     * @param source the input data
+     * @return the MimeMessage
+     * @throws MessagingException creating the MimeMessage failed
+     * @throws IOException creating the MimeMessage failed
+     */
+    public static MimeMessage createMimeMessage(final Session session, final File source)
+        throws MessagingException, IOException
+    {
+<span class="fc" id="L74">        try (FileInputStream is = new FileInputStream(source))</span>
+        {
+<span class="fc" id="L76">            return createMimeMessage(session, is);</span>
+        }
+    }
+
+    /**
+     * Creates a MimeMessage.
+     *
+     * @param session the mail session
+     * @param source the input data
+     * @return the MimeMessage
+     * @throws MessagingException creating the MimeMessage failed
+     */
+    public static MimeMessage createMimeMessage(final Session session, final InputStream source)
+        throws MessagingException
+    {
+<span class="fc" id="L91">        return new MimeMessage(session, source);</span>
+    }
+
+    /**
+     * Creates a MimeMessage using the platform's default character encoding.
+     *
+     * @param session the mail session
+     * @param source the input data
+     * @return the MimeMessage
+     * @throws MessagingException creating the MimeMessage failed
+     * @throws IOException creating the MimeMessage failed
+     */
+    public static MimeMessage createMimeMessage(final Session session, final String source)
+        throws MessagingException, IOException
+    {
+<span class="nc" id="L106">        ByteArrayInputStream is = null;</span>
+
+        try
+        {
+<span class="nc" id="L110">            final byte[] byteSource = source.getBytes(Charset.defaultCharset());</span>
+<span class="nc" id="L111">            is = new ByteArrayInputStream(byteSource);</span>
+<span class="nc" id="L112">            return createMimeMessage(session, is);</span>
+        }
+        finally
+        {
+<span class="nc bnc" id="L116" title="All 2 branches missed.">            if (is != null)</span>
+            {
+<span class="nc" id="L118">                is.close();</span>
+            }
+        }
+    }
+
+    /**
+     * Writes a MimeMessage into a file.
+     *
+     * @param mimeMessage the MimeMessage to write
+     * @param resultFile  the file containing the MimeMessgae
+     * @throws MessagingException accessing MimeMessage failed
+     * @throws IOException        writing the MimeMessage failed
+     */
+    public static void writeMimeMessage(final MimeMessage mimeMessage, final File resultFile)
+        throws MessagingException, IOException
+    {
+<span class="pc bpc" id="L134" title="3 of 4 branches missed.">        if (!resultFile.getParentFile().exists() &amp;&amp; !resultFile.getParentFile().mkdirs())</span>
+        {
+<span class="nc" id="L136">            throw new IOException(</span>
+                    &quot;Failed to create the following parent directories: &quot;
+<span class="nc" id="L138">                            + resultFile.getParentFile());</span>
+        }
+<span class="fc" id="L140">        try (FileOutputStream fos = new FileOutputStream(resultFile)) {</span>
+<span class="fc" id="L141">            mimeMessage.writeTo(fos);</span>
+<span class="fc" id="L142">            fos.flush();</span>
+        }
+<span class="fc" id="L144">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

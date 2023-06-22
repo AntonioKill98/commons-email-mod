@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>IDNEmailAddressConverter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Commons Email</a> &gt; <a href="index.source.html" class="el_package">org.apache.commons.mail.util</a> &gt; <span class="el_source">IDNEmailAddressConverter.java</span></div><h1>IDNEmailAddressConverter.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.commons.mail.util;
+
+import javax.mail.internet.InternetAddress;
+import java.net.IDN;
+
+/**
+ * Converts email addresses containing International Domain Names into an ASCII
+ * representation suitable for sending an email.
+ *
+ * @see &lt;a href=&quot;https://docs.oracle.com/javase/tutorial/i18n/network/idn.html&quot;&gt;https://docs.oracle.com/javase/tutorial/i18n/network/idn.html&lt;/a&gt;
+ * @see &lt;a href=&quot;https://en.wikipedia.org/wiki/Punycode&quot;&gt;https://en.wikipedia.org/wiki/Punycode&lt;/a&gt;
+ * @see &lt;a href=&quot;https://tools.ietf.org/html/rfc5891&quot;&gt;https://tools.ietf.org/html/rfc5891&lt;/a&gt;
+ * @see &lt;a href=&quot;https://en.wikipedia.org/wiki/Punycode&quot;&gt;https://en.wikipedia.org/wiki/Punycode&lt;/a&gt;
+ *
+ * @since 1.5
+ */
+<span class="fc" id="L33">public class IDNEmailAddressConverter</span>
+{
+    /**
+     * Convert an email address to its ASCII representation using &quot;Punycode&quot;.
+     *
+     * @param email email address.
+     * @return The ASCII representation
+     */
+    public String toASCII(final String email)
+    {
+<span class="fc" id="L43">        final int idx = findAtSymbolIndex(email);</span>
+
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        if (idx &lt; 0)</span>
+        {
+<span class="fc" id="L47">            return email;</span>
+        }
+
+<span class="fc" id="L50">        return getLocalPart(email, idx) + '@' + IDN.toASCII(getDomainPart(email, idx));</span>
+    }
+
+    /**
+     * Convert the address part of an InternetAddress to its Unicode representation.
+     *
+     * @param address email address.
+     * @return The Unicode representation
+     */
+    String toUnicode(final InternetAddress address)
+    {
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        return address != null ? toUnicode(address.getAddress()) : null;</span>
+    }
+
+    /**
+     * Convert an &quot;Punycode&quot; email address to its Unicode representation.
+     *
+     * @param email email address.
+     * @return The Unicode representation
+     */
+    String toUnicode(final String email)
+    {
+<span class="fc" id="L72">        final int idx = findAtSymbolIndex(email);</span>
+
+<span class="pc bpc" id="L74" title="1 of 2 branches missed.">        if (idx &lt; 0)</span>
+        {
+<span class="nc" id="L76">            return email;</span>
+        }
+
+<span class="fc" id="L79">        return getLocalPart(email, idx) + '@' + IDN.toUnicode(getDomainPart(email, idx));</span>
+    }
+
+    /**
+     * Extracts the local part of the email address.
+     *
+     * @param email email address.
+     * @param idx index of '@' character.
+     * @return local part of email
+     */
+    private String getLocalPart(final String email, final int idx)
+    {
+<span class="fc" id="L91">        return email.substring(0, idx);</span>
+    }
+
+    /**
+     * Extracts the domain part of the email address.
+     *
+     * @param email email address.
+     * @param idx index of '@' character.
+     * @return domain part of email
+     */
+    private String getDomainPart(final String email, final int idx)
+    {
+<span class="fc" id="L103">        return email.substring(idx + 1);</span>
+    }
+
+    /**
+     * Null-safe wrapper for {@link String#indexOf} to find the '@' character.
+     *
+     * @param value String value.
+     * @return index of first '@' character or {@code -1}
+     */
+    private int findAtSymbolIndex(final String value)
+    {
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (value == null)</span>
+        {
+<span class="fc" id="L116">            return -1;</span>
+        }
+
+<span class="fc" id="L119">        return value.indexOf('@');</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>

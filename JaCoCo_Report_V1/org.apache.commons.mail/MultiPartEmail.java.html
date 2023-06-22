@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="it"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MultiPartEmail.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Apache Commons Email</a> &gt; <a href="index.source.html" class="el_package">org.apache.commons.mail</a> &gt; <span class="el_source">MultiPartEmail.java</span></div><h1>MultiPartEmail.java</h1><pre class="source lang-java linenums">/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.commons.mail;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.activation.URLDataSource;
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.MimePart;
+import javax.mail.internet.MimeUtility;
+
+/**
+ * A multipart email.
+ *
+ * &lt;p&gt;This class is used to send multi-part internet email like
+ * messages with attachments.
+ *
+ * &lt;p&gt;To create a multi-part email, call the default constructor and
+ * then you can call setMsg() to set the message and call the
+ * different attach() methods.
+ *
+ * @since 1.0
+ */
+<span class="fc" id="L48">public class MultiPartEmail extends Email</span>
+{
+    /** Body portion of the email. */
+    private MimeMultipart container;
+
+    /** The message container. */
+    private BodyPart primaryBodyPart;
+
+    /** The MIME subtype. */
+    private String subType;
+
+    /** Indicates if the message has been initialized. */
+    private boolean initialized;
+
+    /** Indicates if attachments have been added to the message. */
+    private boolean boolHasAttachments;
+
+    /**
+     * Set the MIME subtype of the email.
+     *
+     * @param aSubType MIME subtype of the email
+     * @since 1.0
+     */
+    public void setSubType(final String aSubType)
+    {
+<span class="nc" id="L73">        this.subType = aSubType;</span>
+<span class="nc" id="L74">    }</span>
+
+    /**
+     * Get the MIME subtype of the email.
+     *
+     * @return MIME subtype of the email
+     * @since 1.0
+     */
+    public String getSubType()
+    {
+<span class="nc" id="L84">        return subType;</span>
+    }
+
+    /**
+     * Add a new part to the email.
+     *
+     * @param partContent The content.
+     * @param partContentType The content type.
+     * @return An Email.
+     * @throws EmailException see javax.mail.internet.MimeBodyPart
+     *  for definitions
+     * @since 1.0
+     */
+    public Email addPart(final String partContent, final String partContentType)
+        throws EmailException
+    {
+<span class="nc" id="L100">            final BodyPart bodyPart = createBodyPart();</span>
+        try
+        {
+<span class="nc" id="L103">            bodyPart.setContent(partContent, partContentType);</span>
+<span class="nc" id="L104">            getContainer().addBodyPart(bodyPart);</span>
+        }
+<span class="nc" id="L106">        catch (final MessagingException me)</span>
+        {
+<span class="nc" id="L108">            throw new EmailException(me);</span>
+<span class="nc" id="L109">        }</span>
+
+<span class="nc" id="L111">        return this;</span>
+    }
+
+    /**
+     * Add a new part to the email.
+     *
+     * @param multipart The MimeMultipart.
+     * @return An Email.
+     * @throws EmailException see javax.mail.internet.MimeBodyPart
+     *  for definitions
+     *  @since 1.0
+     */
+    public Email addPart(final MimeMultipart multipart) throws EmailException
+    {
+        try
+        {
+<span class="nc" id="L127">            return addPart(multipart, getContainer().getCount());</span>
+        }
+<span class="nc" id="L129">        catch (final MessagingException me)</span>
+        {
+<span class="nc" id="L131">            throw new EmailException(me);</span>
+        }
+    }
+
+    /**
+     * Add a new part to the email.
+     *
+     * @param multipart The part to add.
+     * @param index The index to add at.
+     * @return The email.
+     * @throws EmailException An error occurred while adding the part.
+     * @since 1.0
+     */
+    public Email addPart(final MimeMultipart multipart, final int index) throws EmailException
+    {
+<span class="fc" id="L146">        final BodyPart bodyPart = createBodyPart();</span>
+        try
+        {
+<span class="fc" id="L149">            bodyPart.setContent(multipart);</span>
+<span class="fc" id="L150">            getContainer().addBodyPart(bodyPart, index);</span>
+        }
+<span class="nc" id="L152">        catch (final MessagingException me)</span>
+        {
+<span class="nc" id="L154">            throw new EmailException(me);</span>
+<span class="fc" id="L155">        }</span>
+
+<span class="fc" id="L157">        return this;</span>
+    }
+
+    /**
+     * Initialize the multipart email.
+     * @since 1.0
+     */
+    protected void init()
+    {
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (initialized)</span>
+        {
+<span class="nc" id="L168">            throw new IllegalStateException(&quot;Already initialized&quot;);</span>
+        }
+
+<span class="fc" id="L171">        container = createMimeMultipart();</span>
+<span class="fc" id="L172">        super.setContent(container);</span>
+
+<span class="fc" id="L174">        initialized = true;</span>
+<span class="fc" id="L175">    }</span>
+
+    /**
+     * Set the message of the email.
+     *
+     * @param msg A String.
+     * @return An Email.
+     * @throws EmailException see javax.mail.internet.MimeBodyPart
+     *  for definitions
+     * @since 1.0
+     */
+    @Override
+    public Email setMsg(final String msg) throws EmailException
+    {
+        // throw exception on null message
+<span class="pc bpc" id="L190" title="1 of 2 branches missed.">        if (EmailUtils.isEmpty(msg))</span>
+        {
+<span class="nc" id="L192">            throw new EmailException(&quot;Invalid message supplied&quot;);</span>
+        }
+        try
+        {
+<span class="fc" id="L196">            final BodyPart primary = getPrimaryBodyPart();</span>
+
+<span class="pc bpc" id="L198" title="2 of 4 branches missed.">            if (primary instanceof MimePart &amp;&amp; EmailUtils.isNotEmpty(charset))</span>
+            {
+<span class="fc" id="L200">                ((MimePart) primary).setText(msg, charset);</span>
+            }
+            else
+            {
+<span class="nc" id="L204">                primary.setText(msg);</span>
+            }
+        }
+<span class="nc" id="L207">        catch (final MessagingException me)</span>
+        {
+<span class="nc" id="L209">            throw new EmailException(me);</span>
+<span class="fc" id="L210">        }</span>
+<span class="fc" id="L211">        return this;</span>
+    }
+
+    /**
+     * Does the work of actually building the MimeMessage. Please note that
+     * a user rarely calls this method directly and only if he/she is
+     * interested in the sending the underlying MimeMessage without
+     * commons-email.
+     *
+     * @throws EmailException if there was an error.
+     * @since 1.0
+     */
+    @Override
+    public void buildMimeMessage() throws EmailException
+    {
+        try
+        {
+<span class="fc bfc" id="L228" title="All 2 branches covered.">            if (primaryBodyPart != null)</span>
+            {
+                // before a multipart message can be sent, we must make sure that
+                // the content for the main body part was actually set.  If not,
+                // an IOException will be thrown during super.send().
+
+<span class="fc" id="L234">                final BodyPart body = this.getPrimaryBodyPart();</span>
+                try
+                {
+<span class="fc" id="L237">                    body.getContent();</span>
+                }
+<span class="nc" id="L239">                catch (final IOException e) // NOPMD</span>
+                {
+                    // do nothing here.
+                    // content will be set to an empty string as a result.
+                    // (Should this really be rethrown as an email exception?)
+                    // throw new EmailException(e);
+<span class="fc" id="L245">                }</span>
+            }
+
+<span class="pc bpc" id="L248" title="1 of 2 branches missed.">            if (subType != null)</span>
+            {
+<span class="nc" id="L250">                getContainer().setSubType(subType);</span>
+            }
+
+<span class="fc" id="L253">            super.buildMimeMessage();</span>
+        }
+<span class="nc" id="L255">        catch (final MessagingException me)</span>
+        {
+<span class="nc" id="L257">            throw new EmailException(me);</span>
+<span class="fc" id="L258">        }</span>
+<span class="fc" id="L259">    }</span>
+
+    /**
+     * Attach a file.
+     *
+     * @param file A file attachment
+     * @return A MultiPartEmail.
+     * @throws EmailException see javax.mail.internet.MimeBodyPart
+     *  for definitions
+     * @since 1.3
+     */
+    public MultiPartEmail attach(final File file)
+        throws EmailException
+    {
+<span class="fc" id="L273">        final String fileName = file.getAbsolutePath();</span>
+
+        try
+        {
+<span class="pc bpc" id="L277" title="1 of 2 branches missed.">            if (!file.exists())</span>
+            {
+<span class="nc" id="L279">                throw new IOException(&quot;\&quot;&quot; + fileName + &quot;\&quot; does not exist&quot;);</span>
+            }
+
+<span class="fc" id="L282">            final FileDataSource fds = new FileDataSource(file);</span>
+
+<span class="fc" id="L284">            return attach(fds, file.getName(), null, EmailAttachment.ATTACHMENT);</span>
+        }
+<span class="nc" id="L286">        catch (final IOException e)</span>
+        {
+<span class="nc" id="L288">            throw new EmailException(&quot;Cannot attach file \&quot;&quot; + fileName + &quot;\&quot;&quot;, e);</span>
+        }
+    }
+
+    /**
+     * Attach an EmailAttachment.
+     *
+     * @param attachment An EmailAttachment.
+     * @return A MultiPartEmail.
+     * @throws EmailException see javax.mail.internet.MimeBodyPart
+     *  for definitions
+     * @since 1.0
+     */
+    public MultiPartEmail attach(final EmailAttachment attachment)
+        throws EmailException
+    {
+<span class="fc" id="L304">        MultiPartEmail result = null;</span>
+
+<span class="pc bpc" id="L306" title="1 of 2 branches missed.">        if (attachment == null)</span>
+        {
+<span class="nc" id="L308">            throw new EmailException(&quot;Invalid attachment supplied&quot;);</span>
+        }
+
+<span class="fc" id="L311">        final URL url = attachment.getURL();</span>
+
+<span class="pc bpc" id="L313" title="1 of 2 branches missed.">        if (url == null)</span>
+        {
+<span class="fc" id="L315">            String fileName = null;</span>
+            try
+            {
+<span class="fc" id="L318">                fileName = attachment.getPath();</span>
+<span class="fc" id="L319">                final File file = new File(fileName);</span>
+<span class="pc bpc" id="L320" title="1 of 2 branches missed.">                if (!file.exists())</span>
+                {
+<span class="nc" id="L322">                    throw new IOException(&quot;\&quot;&quot; + fileName + &quot;\&quot; does not exist&quot;);</span>
+                }
+<span class="fc" id="L324">                result =</span>
+<span class="fc" id="L325">                    attach(</span>
+                        new FileDataSource(file),
+<span class="fc" id="L327">                        attachment.getName(),</span>
+<span class="fc" id="L328">                        attachment.getDescription(),</span>
+<span class="fc" id="L329">                        attachment.getDisposition());</span>
+            }
+<span class="nc" id="L331">            catch (final IOException e)</span>
+            {
+<span class="nc" id="L333">                throw new EmailException(&quot;Cannot attach file \&quot;&quot; + fileName + &quot;\&quot;&quot;, e);</span>
+<span class="fc" id="L334">            }</span>
+<span class="fc" id="L335">        }</span>
+        else
+        {
+<span class="nc" id="L338">            result =</span>
+<span class="nc" id="L339">                attach(</span>
+                    url,
+<span class="nc" id="L341">                    attachment.getName(),</span>
+<span class="nc" id="L342">                    attachment.getDescription(),</span>
+<span class="nc" id="L343">                    attachment.getDisposition());</span>
+        }
+
+<span class="fc" id="L346">        return result;</span>
+    }
+
+    /**
+     * Attach a file located by its URL.  The disposition of the file
+     * is set to mixed.
+     *
+     * @param url The URL of the file (may be any valid URL).
+     * @param name The name field for the attachment.
+     * @param description A description for the attachment.
+     * @return A MultiPartEmail.
+     * @throws EmailException see javax.mail.internet.MimeBodyPart
+     *  for definitions
+     * @since 1.0
+     */
+    public MultiPartEmail attach(final URL url, final String name, final String description)
+        throws EmailException
+    {
+<span class="fc" id="L364">        return attach(url, name, description, EmailAttachment.ATTACHMENT);</span>
+    }
+
+    /**
+     * Attach a file located by its URL.
+     *
+     * @param url The URL of the file (may be any valid URL).
+     * @param name The name field for the attachment.
+     * @param description A description for the attachment.
+     * @param disposition Either mixed or inline.
+     * @return A MultiPartEmail.
+     * @throws EmailException see javax.mail.internet.MimeBodyPart
+     *  for definitions
+     * @since 1.0
+     */
+    public MultiPartEmail attach(
+        final URL url,
+        final String name,
+        final String description,
+        final String disposition)
+        throws EmailException
+    {
+        // verify that the URL is valid
+       try
+       {
+<span class="fc" id="L389">           url.openStream().close();</span>
+       }
+<span class="nc" id="L391">       catch (final IOException e)</span>
+       {
+<span class="nc" id="L393">           throw new EmailException(&quot;Invalid URL set:&quot; + url, e);</span>
+<span class="fc" id="L394">       }</span>
+
+<span class="fc" id="L396">       return attach(new URLDataSource(url), name, description, disposition);</span>
+    }
+
+    /**
+     * Attach a file specified as a DataSource interface.
+     *
+     * @param ds A DataSource interface for the file.
+     * @param name The name field for the attachment.
+     * @param description A description for the attachment.
+     * @return A MultiPartEmail.
+     * @throws EmailException see javax.mail.internet.MimeBodyPart
+     *  for definitions
+     * @since 1.0
+     */
+    public MultiPartEmail attach(
+        final DataSource ds,
+        final String name,
+        final String description)
+        throws EmailException
+    {
+<span class="pc bpc" id="L416" title="1 of 2 branches missed.">        if (ds == null)</span>
+        {
+<span class="nc" id="L418">            throw new EmailException(&quot;Invalid Datasource&quot;);</span>
+        }
+        // verify that the DataSource is valid
+<span class="fc" id="L421">        try (InputStream is = ds.getInputStream())</span>
+        {
+<span class="pc bpc" id="L423" title="1 of 2 branches missed.">            if (is == null)</span>
+            {
+<span class="nc" id="L425">                throw new EmailException(&quot;Invalid Datasource&quot;);</span>
+            }
+        }
+<span class="nc" id="L428">        catch (final IOException e)</span>
+        {
+<span class="nc" id="L430">            throw new EmailException(&quot;Invalid Datasource&quot;, e);</span>
+<span class="fc" id="L431">        }</span>
+<span class="fc" id="L432">        return attach(ds, name, description, EmailAttachment.ATTACHMENT);</span>
+    }
+
+    /**
+     * Attach a file specified as a DataSource interface.
+     *
+     * @param ds A DataSource interface for the file.
+     * @param name The name field for the attachment.
+     * @param description A description for the attachment.
+     * @param disposition Either mixed or inline.
+     * @return A MultiPartEmail.
+     * @throws EmailException see javax.mail.internet.MimeBodyPart
+     *  for definitions
+     * @since 1.0
+     */
+    public MultiPartEmail attach(
+        final DataSource ds,
+        String name,
+        final String description,
+        final String disposition)
+        throws EmailException
+    {
+<span class="pc bpc" id="L454" title="1 of 2 branches missed.">        if (EmailUtils.isEmpty(name))</span>
+        {
+<span class="nc" id="L456">            name = ds.getName();</span>
+        }
+<span class="fc" id="L458">        final BodyPart bodyPart = createBodyPart();</span>
+        try
+        {
+<span class="fc" id="L461">            bodyPart.setDisposition(disposition);</span>
+<span class="fc" id="L462">            bodyPart.setFileName(MimeUtility.encodeText(name));</span>
+<span class="fc" id="L463">            bodyPart.setDescription(description);</span>
+<span class="fc" id="L464">            bodyPart.setDataHandler(new DataHandler(ds));</span>
+
+<span class="fc" id="L466">            getContainer().addBodyPart(bodyPart);</span>
+        }
+<span class="nc" id="L468">        catch (final UnsupportedEncodingException | MessagingException me)</span>
+        {
+            // in case the file name could not be encoded
+<span class="nc" id="L471">            throw new EmailException(me);</span>
+<span class="fc" id="L472">        }</span>
+<span class="fc" id="L473">        setBoolHasAttachments(true);</span>
+
+<span class="fc" id="L475">        return this;</span>
+    }
+
+    /**
+     * Gets first body part of the message.
+     *
+     * @return The primary body part.
+     * @throws MessagingException An error occurred while getting the primary body part.
+     * @since 1.0
+     */
+    protected BodyPart getPrimaryBodyPart() throws MessagingException
+    {
+<span class="fc bfc" id="L487" title="All 2 branches covered.">        if (!initialized)</span>
+        {
+<span class="fc" id="L489">            init();</span>
+        }
+
+        // Add the first body part to the message.  The fist body part must be
+<span class="fc bfc" id="L493" title="All 2 branches covered.">        if (this.primaryBodyPart == null)</span>
+        {
+<span class="fc" id="L495">            primaryBodyPart = createBodyPart();</span>
+<span class="fc" id="L496">            getContainer().addBodyPart(primaryBodyPart, 0);</span>
+        }
+
+<span class="fc" id="L499">        return primaryBodyPart;</span>
+    }
+
+    /**
+     * Gets the message container.
+     *
+     * @return The message container.
+     * @since 1.0
+     */
+    protected MimeMultipart getContainer()
+    {
+<span class="fc bfc" id="L510" title="All 2 branches covered.">        if (!initialized)</span>
+        {
+<span class="fc" id="L512">            init();</span>
+        }
+<span class="fc" id="L514">        return container;</span>
+    }
+
+    /**
+     * Creates a body part object.
+     * Can be overridden if you don't want to create a BodyPart.
+     *
+     * @return the created body part
+     */
+    protected BodyPart createBodyPart()
+    {
+<span class="fc" id="L525">        return new MimeBodyPart();</span>
+    }
+
+    /**
+     * Creates a mime multipart object.
+     *
+     * @return the created mime part
+     */
+    protected MimeMultipart createMimeMultipart()
+    {
+<span class="fc" id="L535">        return new MimeMultipart();</span>
+    }
+
+    /**
+     * Checks whether there are attachments.
+     *
+     * @return true if there are attachments
+     * @since 1.0
+     */
+    public boolean isBoolHasAttachments()
+    {
+<span class="fc" id="L546">        return boolHasAttachments;</span>
+    }
+
+    /**
+     * Sets whether there are attachments.
+     *
+     * @param b  the attachments flag
+     * @since 1.0
+     */
+    public void setBoolHasAttachments(final boolean b)
+    {
+<span class="fc" id="L557">        boolHasAttachments = b;</span>
+<span class="fc" id="L558">    }</span>
+
+    /**
+     * Checks if this object is initialized.
+     *
+     * @return true if initialized
+     */
+    protected boolean isInitialized()
+    {
+<span class="nc" id="L567">        return initialized;</span>
+    }
+
+    /**
+     * Sets the initialized status of this object.
+     *
+     * @param b  the initialized status flag
+     */
+    protected void setInitialized(final boolean b)
+    {
+<span class="nc" id="L577">        initialized = b;</span>
+<span class="nc" id="L578">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.10.202304240956</span></div></body></html>
