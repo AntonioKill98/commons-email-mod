@@ -262,6 +262,19 @@
         </dependency>
         <!-- FINE AGGIUNTA DI PITEST DEPENDENCY -->
 
+        <!-- INIZIO AGGIUNTA DI JMH BENCHMARK -->
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-core</artifactId>
+            <version>1.36</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjdk.jmh</groupId>
+            <artifactId>jmh-generator-annprocess</artifactId>
+            <version>1.36</version>
+        </dependency>
+        <!-- FINE AGGIUNTA DI JMH BENCHMARK -->
+
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
