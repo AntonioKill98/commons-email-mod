@@ -348,31 +348,7 @@
         <plugins>
 
             <!-- AGGIUNTA PITEST PLUGIN -->
-            <!-- DISATTIVATO PER ERRORI
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>1.14.0</version>
-                <configuration>
-                    <targetClasses>
-                        <param>org.apache.commons.email.*</param>
-                    </targetClasses>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>pitest</id>
-                        <goals>
-                            <goal>mutationCoverage</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
-            <!-- <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <version>1.14.0</version>
-            </plugin> -->
+            <!-- DISATTIVATO PER EVITARE COMPUTAZIONI INFINITE
             <plugin>
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
@@ -395,6 +371,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <!-- FINE AGGIUNTA PITEST PLUGIN -->
 
             <plugin>

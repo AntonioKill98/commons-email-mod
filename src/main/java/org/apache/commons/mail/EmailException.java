@@ -97,8 +97,11 @@ public class EmailException
      * @param out  the {@code PrintStream} to use for output
      */
     @Override
-    public void printStackTrace(final PrintStream out)
+    public synchronized void printStackTrace(final PrintStream out)
     {
+        /*
+          CODE REFACTORING SOLUZIONE BUG, RENDO SYNCHRONIZED TUTTO IL METODO
+
         synchronized (out)
         {
             final PrintWriter pw = new PrintWriter(new OutputStreamWriter(out, Charset.defaultCharset()), false);
@@ -107,6 +110,11 @@ public class EmailException
             // Flush the PrintWriter before it's GC'ed.
             pw.flush();
         }
+
+         */
+        final PrintWriter pw = new PrintWriter(new OutputStreamWriter(out, Charset.defaultCharset()), false);
+        printStackTrace(pw);
+        pw.flush();
     }
 
     /**
@@ -115,11 +123,16 @@ public class EmailException
      * @param out  the {@code PrintWriter} to use for output
      */
     @Override
-    public void printStackTrace(final PrintWriter out)
+    public synchronized void printStackTrace(final PrintWriter out)
     {
+        /*
+          CODE REFACTORING SOLUZIONE BUG, RENDO SYNCHRONIZED TUTTO IL METODO
         synchronized (out)
         {
             super.printStackTrace(out);
         }
+
+         */
+        super.printStackTrace(out);
     }
 }

@@ -50,8 +50,12 @@ public class ImageHtmlEmail extends HtmlEmail
     // can be arbitrary text between "IMG" and "SRC" like IDs and other things.
 
     /** Regexp for extracting {@code <img>} tags */
+    /* public static final String REGEX_IMG_SRC =
+            "(<[Ii][Mm][Gg]\\s*[^>]*?\\s+[Ss][Rr][Cc]\\s*=\\s*[\"'])([^\"']+?)([\"'])";*/
+    /* MODIFICO QUESTA COSTANTE PER IMPEDIRE IL BACKTRACKING */
     public static final String REGEX_IMG_SRC =
-            "(<[Ii][Mm][Gg]\\s*[^>]*?\\s+[Ss][Rr][Cc]\\s*=\\s*[\"'])([^\"']+?)([\"'])";
+            "(<[Ii][Mm][Gg]\\s*[^>]*?\\s+[Ss][Rr][Cc]\\s*=\\s*[\"'])([^\"'\\s]+?)([\"'])";
+
 
     /** regexp for extracting {@code <script>} tags */
     public static final String REGEX_SCRIPT_SRC =

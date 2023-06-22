@@ -1011,6 +1011,7 @@ public class EmailTest extends AbstractEmailTest
     @Test
     public void testSendBadHostName()
     {
+        /*
         try
         {
             getMailServer();
@@ -1033,6 +1034,51 @@ public class EmailTest extends AbstractEmailTest
         }
         catch (final EmailException e)
         {
+            assertTrue(e.getCause() instanceof ParseException);
+            fakeMailServer.stop();
+        }
+        */
+        getMailServer();
+        email = new MockEmailConcrete();
+        email.setSubject("Test Email #1 Subject");
+        email.setHostName("bad.host.com");
+        try {
+            email.setFrom("me@home.com");
+        } catch (EmailException e) {
+            assertTrue(e.getCause() instanceof ParseException);
+            fakeMailServer.stop();
+        }
+        try {
+            email.addTo("me@home.com");
+        } catch (EmailException e) {
+            assertTrue(e.getCause() instanceof ParseException);
+            fakeMailServer.stop();
+        }
+        try {
+            email.addCc("me@home.com");
+        } catch (EmailException e) {
+            assertTrue(e.getCause() instanceof ParseException);
+            fakeMailServer.stop();
+        }
+        try {
+            email.addBcc("me@home.com");
+        } catch (EmailException e) {
+            assertTrue(e.getCause() instanceof ParseException);
+            fakeMailServer.stop();
+        }
+        try {
+            email.addReplyTo("me@home.com");
+        } catch (EmailException e) {
+            assertTrue(e.getCause() instanceof ParseException);
+            fakeMailServer.stop();
+        }
+        email.setContent(
+                "test string object",
+                " ; charset=" + EmailConstants.US_ASCII);
+        try {
+            email.send();
+            fail("Should have thrown an exception");
+        } catch (EmailException e) {
             assertTrue(e.getCause() instanceof ParseException);
             fakeMailServer.stop();
         }
@@ -1096,6 +1142,7 @@ public class EmailTest extends AbstractEmailTest
     @Test
     public void testSendCorrectSmtpPortContainedInException()
     {
+        /* PROVO A SCOMPORRE QUESTO TEST PER EVITARE UN BUG
         try
         {
             getMailServer();
@@ -1111,6 +1158,31 @@ public class EmailTest extends AbstractEmailTest
         }
         catch (final EmailException e)
         {
+            assertTrue(e.getMessage().contains("bad.host.com:465"));
+            fakeMailServer.stop();
+        }
+        */
+        getMailServer();
+        email = new MockEmailConcrete();
+        email.setHostName("bad.host.com");
+        email.setSSLOnConnect(true);
+        try {
+            email.setFrom(strTestMailFrom);
+        } catch (final EmailException e) {
+            assertTrue(e.getMessage().contains("bad.host.com:465"));
+            fakeMailServer.stop();
+        }
+        try {
+            email.addTo(strTestMailTo);
+        } catch (final EmailException e) {
+            assertTrue(e.getMessage().contains("bad.host.com:465"));
+            fakeMailServer.stop();
+        }
+        email.setAuthentication(null, null);
+        try {
+            email.send();
+            fail("Should have thrown an exception");
+        } catch (final EmailException e) {
             assertTrue(e.getMessage().contains("bad.host.com:465"));
             fakeMailServer.stop();
         }

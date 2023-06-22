@@ -40,14 +40,22 @@ public class IDNEmailAddressConverter
      */
     public String toASCII(final String email)
     {
-        final int idx = findAtSymbolIndex(email);
+        //BLOCCO MODIFICATO PER EVITARE VALORI NULL ALLA FUNZIONE getLocalPart()
 
-        if (idx < 0)
-        {
-            return email;
+        if (email == null) {
+            return null;
         }
 
-        return getLocalPart(email, idx) + '@' + IDN.toASCII(getDomainPart(email, idx));
+        final int idx = findAtSymbolIndex(email);
+
+        if (idx < 0) //Se eMail è == null
+        {
+            return email; //Return null
+        }
+        else { //Altrimenti
+            return getLocalPart(email, idx) + '@' + IDN.toASCII(getDomainPart(email, idx));
+            //Ritorna la eMail in formato ASCII
+        }
     }
 
     /**
@@ -69,14 +77,17 @@ public class IDNEmailAddressConverter
      */
     String toUnicode(final String email)
     {
-        final int idx = findAtSymbolIndex(email);
-
-        if (idx < 0)
-        {
-            return email;
+        if (email == null) {
+            return null;
         }
 
-        return getLocalPart(email, idx) + '@' + IDN.toUnicode(getDomainPart(email, idx));
+        final int idx = findAtSymbolIndex(email);
+
+        if (idx < 0) {
+            return email;
+        } else {
+            return getLocalPart(email, idx) + '@' + IDN.toUnicode(getDomainPart(email, idx));
+        }
     }
 
     /**
