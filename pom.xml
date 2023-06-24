@@ -708,56 +708,7 @@
             -->
                   
       <!-- FINE AGGIUNTA PITEST PLUGIN -->
-                  
-      <!-- PLUGIN JMH V1 -->
-                  
-      <!--
-            <plugin>
-                <groupId>org.openjdk.jmh</groupId>
-                <artifactId>jmh-maven-plugin</artifactId>
-                <version>1.36</version>
-                <configuration>
-                    <mainClass>src/main/java/org/apache/commons/mail/benchmark/sendMailBench.java</mainClass>
-                </configuration>
-            </plugin>
-            -->
-                  
-      <!-- FINE PLUGIN JMH V1 -->
-                  
-      <!-- PLUGIN JMH V2 CON REPORT HTML -->
-                  
-      <!--
-            <plugin>
-                <groupId>org.openjdk.jmh</groupId>
-                <artifactId>jmh-maven-plugin</artifactId>
-                <version>1.36</version>
-                <configuration>
-                    <includes>
-                        <include>org.apache.commons.mail.benchmark.sendMailBench</include>
-                    </includes>
-                    <reportsDirectory>${project.build.directory}/jmh-reports</reportsDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>run-benchmarks</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>benchmark</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.commons</groupId>
-                        <artifactId>commons-email</artifactId>
-                        <version>1.6.0</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-            -->
-                  
-      <!-- FINE PLUGIN JMH v2 -->
-                  
+      
       <plugin>
                         
         <groupId>org.apache.maven.plugins</groupId>
