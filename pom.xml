@@ -488,31 +488,17 @@
             
     <!-- FINE AGGIUNTA DI PITEST DEPENDENCY -->
             
-    <!-- -->
-            
-    <!--
-        <dependency>
-            <groupId>org.openjdk.jmh</groupId>
-            <artifactId>jmh-core</artifactId>
-            <version>1.36</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjdk.jmh</groupId>
-            <artifactId>jmh-generator-annprocess</artifactId>
-            <version>1.36</version>
-        </dependency>
-        -->
-            
+    <!-- DEPENDENCY JAVA MICROBENCHMARK HARNESS -->
+
     <dependency>
-                  
       <groupId>org.openjdk.jmh</groupId>
-                  
       <artifactId>jmh-core</artifactId>
-                  
-      <version>1.36</version>
-                  
-      <scope>test</scope>
-              
+      <version>1.35</version>
+    </dependency>
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-generator-annprocess</artifactId>
+      <version>1.35</version>
     </dependency>
             
     <!-- -->
@@ -708,7 +694,7 @@
             -->
                   
       <!-- FINE AGGIUNTA PITEST PLUGIN -->
-      
+
       <plugin>
                         
         <groupId>org.apache.maven.plugins</groupId>
@@ -1174,14 +1160,5 @@
       </distributionManagement>
               
     </profile>
-            
-    
   </profiles>
-      
-
-  <modules>
-      
-    <module>test</module>
-      
-  </modules>
 </project>
