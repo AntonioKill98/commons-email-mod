@@ -928,7 +928,7 @@ public class EmailTest extends AbstractEmailTest
         final String headerValue = "1234567890 1234567890 123456789 01234567890 123456789 0123456789 01234567890 01234567890";
         email.addHeader("X-LongHeader", headerValue);
 
-        assertTrue(email.getHeaders().size() == 1);
+        assertEquals(1,email.getHeaders().size());
         // the header should not yet be folded -> will be done by buildMimeMessage()
         assertFalse(email.getHeaders().get("X-LongHeader").contains("\r\n"));
 
@@ -945,7 +945,7 @@ public class EmailTest extends AbstractEmailTest
         assertEquals(2, lines.length);
 
         // there should only be one line-break
-        assertTrue(values[0].indexOf("\n") == values[0].lastIndexOf("\n"));
+        assertEquals(values[0].indexOf("\n"), values[0].lastIndexOf("\n"));
     }
 
     @Test
@@ -1011,7 +1011,6 @@ public class EmailTest extends AbstractEmailTest
     @Test
     public void testSendBadHostName()
     {
-        /*
         try
         {
             getMailServer();
@@ -1034,51 +1033,6 @@ public class EmailTest extends AbstractEmailTest
         }
         catch (final EmailException e)
         {
-            assertTrue(e.getCause() instanceof ParseException);
-            fakeMailServer.stop();
-        }
-        */
-        getMailServer();
-        email = new MockEmailConcrete();
-        email.setSubject("Test Email #1 Subject");
-        email.setHostName("bad.host.com");
-        try {
-            email.setFrom("me@home.com");
-        } catch (EmailException e) {
-            assertTrue(e.getCause() instanceof ParseException);
-            fakeMailServer.stop();
-        }
-        try {
-            email.addTo("me@home.com");
-        } catch (EmailException e) {
-            assertTrue(e.getCause() instanceof ParseException);
-            fakeMailServer.stop();
-        }
-        try {
-            email.addCc("me@home.com");
-        } catch (EmailException e) {
-            assertTrue(e.getCause() instanceof ParseException);
-            fakeMailServer.stop();
-        }
-        try {
-            email.addBcc("me@home.com");
-        } catch (EmailException e) {
-            assertTrue(e.getCause() instanceof ParseException);
-            fakeMailServer.stop();
-        }
-        try {
-            email.addReplyTo("me@home.com");
-        } catch (EmailException e) {
-            assertTrue(e.getCause() instanceof ParseException);
-            fakeMailServer.stop();
-        }
-        email.setContent(
-                "test string object",
-                " ; charset=" + EmailConstants.US_ASCII);
-        try {
-            email.send();
-            fail("Should have thrown an exception");
-        } catch (EmailException e) {
             assertTrue(e.getCause() instanceof ParseException);
             fakeMailServer.stop();
         }
@@ -1108,7 +1062,7 @@ public class EmailTest extends AbstractEmailTest
          email.addTo("me@home.com");
          email.getSession().getProperties().setProperty(EmailConstants.MAIL_FROM, "me@home.com");
 
-         email.send();
+         assertEquals(email.send().getClass(), String.class);
     }
 
     @Test
@@ -1142,7 +1096,6 @@ public class EmailTest extends AbstractEmailTest
     @Test
     public void testSendCorrectSmtpPortContainedInException()
     {
-        /* PROVO A SCOMPORRE QUESTO TEST PER EVITARE UN BUG
         try
         {
             getMailServer();
@@ -1158,31 +1111,6 @@ public class EmailTest extends AbstractEmailTest
         }
         catch (final EmailException e)
         {
-            assertTrue(e.getMessage().contains("bad.host.com:465"));
-            fakeMailServer.stop();
-        }
-        */
-        getMailServer();
-        email = new MockEmailConcrete();
-        email.setHostName("bad.host.com");
-        email.setSSLOnConnect(true);
-        try {
-            email.setFrom(strTestMailFrom);
-        } catch (final EmailException e) {
-            assertTrue(e.getMessage().contains("bad.host.com:465"));
-            fakeMailServer.stop();
-        }
-        try {
-            email.addTo(strTestMailTo);
-        } catch (final EmailException e) {
-            assertTrue(e.getMessage().contains("bad.host.com:465"));
-            fakeMailServer.stop();
-        }
-        email.setAuthentication(null, null);
-        try {
-            email.send();
-            fail("Should have thrown an exception");
-        } catch (final EmailException e) {
             assertTrue(e.getMessage().contains("bad.host.com:465"));
             fakeMailServer.stop();
         }
