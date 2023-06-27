@@ -190,8 +190,10 @@ public abstract class AbstractEmailTest
      * Initializes the stub mail server. Fails if the server cannot be proven
      * to have started. If the server is already started, this method returns
      * without changing the state of the server.
+     *
+     * @return
      */
-    public void getMailServer()
+    public Wiser getMailServer()
     {
         if (this.fakeMailServer == null || isMailServerStopped(fakeMailServer))
         {
@@ -221,6 +223,7 @@ public abstract class AbstractEmailTest
                 }
             }
         }
+        return null;
     }
 
     /**
