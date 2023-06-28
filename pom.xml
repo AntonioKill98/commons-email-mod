@@ -132,6 +132,13 @@
             <version>3.2.0</version>
             <type>maven-plugin</type>
         </dependency>
+
+        <!-- DEPENDENCY DI JAVAX.MAIL RICHIESTA DA EVOSUITE -->
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+            <version>1.6.2</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -174,6 +181,30 @@
                 </configuration>
             </plugin>
             <!-- FINE PLUGIN PiTest -->
+
+            <!-- PLUGIN PER AGGIUNGERE I TEST GENERATI IN AUTOMATICO -->
+            <!-- DISATTIVATO PER ORA
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.4.0</version>
+                <executions>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>EvoSuitePlugin_Output/best-tests</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
+            <!-- -->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
