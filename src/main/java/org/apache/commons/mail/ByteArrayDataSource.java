@@ -45,10 +45,10 @@ import javax.activation.DataSource;
 public class ByteArrayDataSource implements DataSource
 {
     /** Define the buffer size. */
-    /*
-    VIENE USATO UNA SOLA VOLTA, QUINDI L'HO ESCLUSO
+
+    //VIENE USATO UNA SOLA VOLTA, QUINDI L'HO ESCLUSO
     public static final int BUFFER_SIZE = 512;
-    */
+    //L'HO ANCHE DOVUTO RIMETTERE PERCHE' GITHUB NON ERA FELICE DI CIO'
 
     /** Stream containing the Data. */
     private ByteArrayOutputStream baos;
@@ -202,7 +202,7 @@ public class ByteArrayDataSource implements DataSource
              BufferedOutputStream osWriter = new BufferedOutputStream(baos)) {
 
             int length = 0;
-            final byte[] buffer = new byte[512];
+            final byte[] buffer = new byte[BUFFER_SIZE];
 
             while ((length = bis.read(buffer)) != -1) {
                 osWriter.write(buffer, 0, length);
